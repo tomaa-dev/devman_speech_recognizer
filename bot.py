@@ -5,6 +5,10 @@ from dotenv import load_dotenv
 from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
+from dialogflow_utils import detect_intent_texts
+
+load_dotenv()
+
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
@@ -25,11 +29,14 @@ def help_command(update: Update, context: CallbackContext):
 
 
 def echo(update: Update, context: CallbackContext):
-    update.message.reply_text(update.message.text)
+    session_id = str(update.effective_user.id)
+    project_id = os.getenv('GOOGLE_CLOUD_PROJECT')
+    text = update.message.text
+    answer = detect_intent_texts(project_id, session_id, text)
+    update.message.reply_text(answer)
 
 
-def main():
-    load_dotenv()
+def main(): 
     token = os.getenv('TG_BOT_TOKEN')
     updater = Updater(token)
 
