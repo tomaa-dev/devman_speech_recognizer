@@ -7,6 +7,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Callb
 
 from dialogflow_utils import detect_intent_texts
 
+
 load_dotenv()
 
 
