@@ -27,11 +27,12 @@ def main():
     longpoll = VkLongPoll(vk_session)
 
     for event in longpoll.listen():
-    	if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-        	session_id = str(event.user_id)
-        	text = event.text
-        	answer = detect_intent_texts(project_id, session_id, text)
-        	send_message(api, event.user_id, answer)
+        if event.type == VkEventType.MESSAGE_NEW and event.to_me:
+            session_id = str(event.user_id)
+            text = event.text
+            answer = detect_intent_texts(project_id, session_id, text)
+            if answer:
+                send_message(api, event.user_id, answer)
 
 
 if __name__ == "__main__":
