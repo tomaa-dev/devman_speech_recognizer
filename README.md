@@ -4,7 +4,8 @@
 которые отвечают пользователям через Google Dialogflow.
 
 **Telegram-бот:** [@OnlinePublishersBot](https://t.me/OnlinePublishersBot)
-**ВК-бот:**[@VKBot](https://vk.ru/im/convo/-241724042?entrypoint=list_all)
+
+**ВК-сообщество/бот:**[@VKBot](https://vk.ru/club241724042)
 
 # Как установить
 Операционная система: любая, где доступен Python 3 (Windows, macOS, Linux). Используем 'pip' для установки зависимостей (requests, python-dotenv):
@@ -42,3 +43,5 @@ python vk_bot.py
 **TG_CHAT_ID** - ID пользователя Telegram.
 
 **VK_BOT_TOKEN=** - токен сообщества ВКонтакте.
+
+[![speech.gif](https://i.postimg.cc/FKGnx321/speech.gif)](https://postimg.cc/p9hZWhVt)
