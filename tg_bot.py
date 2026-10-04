@@ -1,19 +1,15 @@
 import logging
 import os
-from dotenv import load_dotenv
 
-from telegram import Update, ForceReply
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+from dotenv import load_dotenv
+from telegram import ForceReply, Update
+from telegram.ext import (CallbackContext, CommandHandler, Filters,
+                          MessageHandler, Updater)
 
 from dialogflow_utils import detect_intent_texts
-
+from logging_utils import setup_logging
 
 load_dotenv()
-
-
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
-)
 
 logger = logging.getLogger(__name__)
 
@@ -34,18 +30,27 @@ def echo(update: Update, context: CallbackContext):
     project_id = os.getenv('GOOGLE_CLOUD_PROJECT')
     text = update.message.text
     answer = detect_intent_texts(project_id, session_id, text)
-    update.message.reply_text(answer)
+    if answer:
+        update.message.reply_text(answer)
+
+
+def error_handler(update, context: CallbackContext):
+    logger.error("Ошибка в TG-боте", exc_info=context.error)
 
 
 def main(): 
+    setup_logging()
+
     token = os.getenv('TG_BOT_TOKEN')
     updater = Updater(token)
-
     dispatcher = updater.dispatcher
-
+    
+    dispatcher.add_error_handler(error_handler)
     dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CommandHandler("help", help_command))
     dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
+
+    logger.info("Бот запущен")
 
     updater.start_polling()
     updater.idle()

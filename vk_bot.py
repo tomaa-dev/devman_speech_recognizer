@@ -1,14 +1,18 @@
+import logging
 import os
 import random
+import time
 
 import vk_api
-from vk_api.longpoll import VkLongPoll, VkEventType
 from dotenv import load_dotenv
+from vk_api.longpoll import VkEventType, VkLongPoll
 
 from dialogflow_utils import detect_intent_texts
-
+from logging_utils import setup_logging
 
 load_dotenv()
+
+logger = logging.getLogger(__name__)
 
 
 def send_message(api, user_id, text):
@@ -20,19 +24,27 @@ def send_message(api, user_id, text):
 
 
 def main():
+    setup_logging()
+    logger.info("VK-бот запущен")
+
     vk_token = os.getenv('VK_BOT_TOKEN')
     project_id = os.getenv('GOOGLE_CLOUD_PROJECT')
     vk_session = vk_api.VkApi(token=vk_token)
     api = vk_session.get_api()
     longpoll = VkLongPoll(vk_session)
 
-    for event in longpoll.listen():
-        if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-            session_id = str(event.user_id)
-            text = event.text
-            answer = detect_intent_texts(project_id, session_id, text)
-            if answer:
-                send_message(api, event.user_id, answer)
+    while True:
+        try:
+            for event in longpoll.listen():
+                if event.type == VkEventType.MESSAGE_NEW and event.to_me:
+                    session_id = str(event.user_id)
+                    text = event.text
+                    answer = detect_intent_texts(project_id, session_id, text)
+                    if answer:
+                        send_message(api, event.user_id, answer)
+        except Exception:
+            logger.error("VK-бот упал", exc_info=True)
+            time.sleep(10)
 
 
 if __name__ == "__main__":
