@@ -44,4 +44,6 @@ python vk_bot.py
 
 **VK_BOT_TOKEN=** - токен сообщества ВКонтакте.
 
-[![speech.gif](https://i.postimg.cc/FKGnx321/speech.gif)](https://postimg.cc/p9hZWhVt)
+Пример результата для Telegram:
+
+![speech_tg_bot](https://raw.githubusercontent.com/tomaa-dev/gif/main/speech.gif)
