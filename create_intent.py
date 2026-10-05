@@ -41,7 +41,7 @@ def create_intent(project_id, display_name, training_phrases_parts, message_text
         }
     )
 
-    print("Intent created: {}".format(response))
+    return response
 
 
 def main():
@@ -54,12 +54,13 @@ def main():
     questions_data = fetch_questions(url)
 
     for display_name, info in questions_data.items():
-        create_intent(
+        response = create_intent(
             project_id=project_id,
             display_name=display_name,
             training_phrases_parts=info["questions"],
             message_texts=[info["answer"]],
         )
+        print("Intent created: {}".format(response))
 
 
 if __name__ == '__main__':
