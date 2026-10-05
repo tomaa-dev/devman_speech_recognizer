@@ -24,10 +24,12 @@ def send_message(api, user_id, text):
 
 def main():
     load_dotenv()
-    setup_logging()
-    logger.info("VK-бот запущен")
-
     vk_token = os.getenv('VK_BOT_TOKEN')
+    tg_token = os.getenv('TG_BOT_TOKEN')
+    tg_chat_id = os.getenv('TG_CHAT_ID')
+
+    setup_logging(tg_token, tg_chat_id)
+
     project_id = os.getenv('GOOGLE_CLOUD_PROJECT')
     vk_session = vk_api.VkApi(token=vk_token)
     api = vk_session.get_api()

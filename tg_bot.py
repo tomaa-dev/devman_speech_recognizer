@@ -1,5 +1,6 @@
 import logging
 import os
+from functools import partial
 
 from dotenv import load_dotenv
 from telegram import ForceReply, Update
@@ -24,9 +25,8 @@ def help_command(update: Update, context: CallbackContext):
     update.message.reply_text('Help!')
 
 
-def echo(update: Update, context: CallbackContext):
+def echo(update: Update, context: CallbackContext, project_id):
     session_id = str(update.effective_user.id)
-    project_id = os.getenv('GOOGLE_CLOUD_PROJECT')
     text = update.message.text
     answer = detect_intent_texts(project_id, session_id, text)
     if answer:
@@ -39,18 +39,18 @@ def error_handler(update, context: CallbackContext):
 
 def main():
     load_dotenv()
-    setup_logging()
-
-    token = os.getenv('TG_BOT_TOKEN')
-    updater = Updater(token)
+    tg_token = os.getenv('TG_BOT_TOKEN')
+    tg_chat_id = os.getenv('TG_CHAT_ID')
+    project_id = os.getenv('GOOGLE_CLOUD_PROJECT')
+    setup_logging(tg_token, tg_chat_id)
+    
+    updater = Updater(tg_token)
     dispatcher = updater.dispatcher
     
     dispatcher.add_error_handler(error_handler)
     dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CommandHandler("help", help_command))
-    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
-
-    logger.info("Бот запущен")
+    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo, project_id=project_id))
 
     updater.start_polling()
     updater.idle()

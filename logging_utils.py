@@ -1,5 +1,4 @@
 import logging
-import os
 
 import telegram
 
@@ -18,14 +17,12 @@ class MyLogsHandler(logging.Handler):
             self.handleError(record)
 
 
-def setup_logging():
+def setup_logging(tg_token, chat_id):
     logging.basicConfig(
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         level=logging.INFO,
     )
 
-    tg_token = os.getenv('TG_BOT_TOKEN')
-    chat_id = os.getenv('TG_CHAT_ID')
     bot = telegram.Bot(token=tg_token)
 
     handler = MyLogsHandler(bot, chat_id)
