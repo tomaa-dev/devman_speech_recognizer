@@ -10,7 +10,6 @@ from vk_api.longpoll import VkEventType, VkLongPoll
 from dialogflow_utils import detect_intent_texts
 from logging_utils import setup_logging
 
-load_dotenv()
 
 logger = logging.getLogger(__name__)
 
@@ -24,6 +23,7 @@ def send_message(api, user_id, text):
 
 
 def main():
+    load_dotenv()
     setup_logging()
     logger.info("VK-бот запущен")
 

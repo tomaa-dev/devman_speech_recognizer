@@ -4,10 +4,6 @@ from pathlib import Path
 import requests
 from dotenv import load_dotenv
 
-BASE_DIR = Path(__file__).resolve().parent
-load_dotenv(BASE_DIR / ".env")
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = str(BASE_DIR / "credentials.json")
-
 
 def fetch_questions(url):
     response = requests.get(url)
@@ -49,6 +45,10 @@ def create_intent(project_id, display_name, training_phrases_parts, message_text
 
 
 def main():
+    BASE_DIR = Path(__file__).resolve().parent
+    load_dotenv(BASE_DIR / ".env")
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = str(BASE_DIR / "credentials.json")
+
     url = 'https://dvmn.org/media/filer_public/a7/db/a7db66c0-1259-4dac-9726-2d1fa9c44f20/questions.json'
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
     questions_data = fetch_questions(url)

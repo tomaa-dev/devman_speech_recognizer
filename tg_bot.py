@@ -9,7 +9,6 @@ from telegram.ext import (CallbackContext, CommandHandler, Filters,
 from dialogflow_utils import detect_intent_texts
 from logging_utils import setup_logging
 
-load_dotenv()
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +37,8 @@ def error_handler(update, context: CallbackContext):
     logger.error("Ошибка в TG-боте", exc_info=context.error)
 
 
-def main(): 
+def main():
+    load_dotenv()
     setup_logging()
 
     token = os.getenv('TG_BOT_TOKEN')
