@@ -1,3 +1,4 @@
+import argparse
 import os
 from pathlib import Path
 
@@ -49,9 +50,17 @@ def main():
     load_dotenv(BASE_DIR / ".env")
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = str(BASE_DIR / "credentials.json")
 
-    url = 'https://dvmn.org/media/filer_public/a7/db/a7db66c0-1259-4dac-9726-2d1fa9c44f20/questions.json'
+    parser = argparse.ArgumentParser(description="Создание интентов")
+    parser.add_argument(
+        "url",
+        nargs="?",
+        default="https://dvmn.org/media/filer_public/a7/db/a7db66c0-1259-4dac-9726-2d1fa9c44f20/questions.json",
+        help="Путь к файлу с вопросами",
+    )
+    args = parser.parse_args() 
+
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
-    questions_data = fetch_questions(url)
+    questions_data = fetch_questions(args.url)
 
     for display_name, info in questions_data.items():
         response = create_intent(
