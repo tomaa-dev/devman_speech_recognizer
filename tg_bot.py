@@ -25,7 +25,7 @@ def help_command(update: Update, context: CallbackContext):
     update.message.reply_text('Help!')
 
 
-def echo(update: Update, context: CallbackContext, project_id):
+def handle_message(update: Update, context: CallbackContext, project_id):
     session_id = str(update.effective_user.id)
     text = update.message.text
     answer = detect_intent_texts(project_id, session_id, text)
@@ -50,7 +50,10 @@ def main():
     dispatcher.add_error_handler(error_handler)
     dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CommandHandler("help", help_command))
-    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo, project_id=project_id))
+    dispatcher.add_handler(MessageHandler(
+        Filters.text & ~Filters.command,
+        partial(handle_message, project_id=project_id),
+    ))
 
     updater.start_polling()
     updater.idle()
