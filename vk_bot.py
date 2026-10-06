@@ -22,15 +22,31 @@ def send_message(api, user_id, text):
     )
 
 
+def handle_message(api, event, project_id):
+    if event.type != VkEventType.MESSAGE_NEW:
+        return
+    if not event.to_me:
+        return
+
+    session_id = str(event.user_id)
+    text = event.text
+    answer = detect_intent_texts(project_id, session_id, text)
+    if not answer:
+        return
+
+    send_message(api, event.user_id, answer)
+
+
 def main():
     load_dotenv()
+
     vk_token = os.getenv('VK_BOT_TOKEN')
     tg_token = os.getenv('TG_BOT_TOKEN')
     tg_chat_id = os.getenv('TG_CHAT_ID')
+    project_id = os.getenv('GOOGLE_CLOUD_PROJECT')
 
     setup_logging(tg_token, tg_chat_id)
-
-    project_id = os.getenv('GOOGLE_CLOUD_PROJECT')
+    
     vk_session = vk_api.VkApi(token=vk_token)
     api = vk_session.get_api()
     longpoll = VkLongPoll(vk_session)
@@ -38,12 +54,7 @@ def main():
     while True:
         try:
             for event in longpoll.listen():
-                if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-                    session_id = str(event.user_id)
-                    text = event.text
-                    answer = detect_intent_texts(project_id, session_id, text)
-                    if answer:
-                        send_message(api, event.user_id, answer)
+                handle_message(api, event, project_id)
         except Exception:
             logger.error("VK-бот упал", exc_info=True)
             time.sleep(10)
