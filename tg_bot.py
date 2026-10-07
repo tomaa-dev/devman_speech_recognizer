@@ -39,9 +39,11 @@ def error_handler(update, context: CallbackContext):
 
 def main():
     load_dotenv()
-    tg_token = os.getenv('TG_BOT_TOKEN')
-    tg_chat_id = os.getenv('TG_CHAT_ID')
-    project_id = os.getenv('GOOGLE_CLOUD_PROJECT')
+
+    tg_token = os.environ['TG_BOT_TOKEN']
+    tg_chat_id = os.environ['TG_CHAT_ID']
+    project_id = os.environ['GOOGLE_CLOUD_PROJECT']
+
     setup_logging(tg_token, tg_chat_id)
     
     updater = Updater(tg_token)

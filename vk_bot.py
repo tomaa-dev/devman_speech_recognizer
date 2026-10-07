@@ -40,10 +40,10 @@ def handle_message(api, event, project_id):
 def main():
     load_dotenv()
 
-    vk_token = os.getenv('VK_BOT_TOKEN')
-    tg_token = os.getenv('TG_BOT_TOKEN')
-    tg_chat_id = os.getenv('TG_CHAT_ID')
-    project_id = os.getenv('GOOGLE_CLOUD_PROJECT')
+    vk_token = os.environ['VK_BOT_TOKEN']
+    tg_token = os.environ['TG_BOT_TOKEN']
+    tg_chat_id = os.environ['TG_CHAT_ID']
+    project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 
     setup_logging(tg_token, tg_chat_id)
     
