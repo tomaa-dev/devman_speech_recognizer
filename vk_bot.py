@@ -28,7 +28,7 @@ def handle_message(api, event, project_id):
     if not event.to_me:
         return
 
-    session_id = str(event.user_id)
+    session_id = f"vk-{event.user_id}"
     text = event.text
     answer = detect_intent_texts(project_id, session_id, text)
     if not answer:

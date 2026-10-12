@@ -26,7 +26,7 @@ def help_command(update: Update, context: CallbackContext):
 
 
 def handle_message(update: Update, context: CallbackContext, project_id):
-    session_id = str(update.effective_user.id)
+    session_id = f"tg-{update.effective_user.id}"
     text = update.message.text
     answer = detect_intent_texts(project_id, session_id, text)
     if answer:
